@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
+//import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+//import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
 
 
@@ -39,20 +39,17 @@ public class Robot extends TimedRobot {
     public static final int can3 = 3;
     public static final int can4 = 4;
 
-    Joystick joy1; //inputs for Joystick
-    Joystick joy2;
+    Joystick joy1 = new Joystick(4); //inputs for Joystick
 
-    VictorSPX leftFrontMotor;
-    VictorSPX leftBackMotor;
+    VictorSPX leftFrontMotor = new VictorSPX(can1);
+    VictorSPX leftRearMotor  = new VictorSPX(can2);
 
-    SpeedControllerGroup leftMotorGroup;
+    VictorSPX rightFrontMotor = new VictorSPX(can3);
+    VictorSPX rightRearMotor  = new VictorSPX(can4);;
 
-    VictorSPX rightFrontMotor;
-    VictorSPX rightBackMotor;
-
-    SpeedControllerGroup rightMotorGroup;
-
-    DifferentialDrive m_drive;
+    //SpeedControllerGroup leftMotorGroup;
+    //SpeedControllerGroup rightMotorGroup;
+    //DifferentialDrive m_drive;
 
     //Measurements Values
 
@@ -72,20 +69,6 @@ public class Robot extends TimedRobot {
 
     public void robotInit() {
 
-        joy1 = new Joystick(0);
-
-        leftFrontMotor = new VictorSPX(can1);
-        leftBackMotor = new VictorSPX(can2);
-
-        // leftMotorGroup = new SpeedControllerGroup(leftFrontMotor,leftBackMotor); //Grouping Left Motor
-
-        rightFrontMotor = new VictorSPX(can3);
-        rightBackMotor = new VictorSPX(can4);
-
-        // rightMotorGroup = new SpeedControllerGroup(rightFrontMotor,rightBackMotor); //Grouping Right Motor
-
-        m_drive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
-
     }
 
     @Override
@@ -93,7 +76,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
 
         timeCount = new Timer();
-
+        timeCount.reset();
         timeCount.start();
 
     }
@@ -104,30 +87,25 @@ public class Robot extends TimedRobot {
 
     public void autonomousPeriodic() {
 
-        if (timeCount.get() < 10) {
-
-            leftMotorGroup.set(1);
-
-            rightMotorGroup.set(1);
-
-        }
-
-    }
-
-
-
-    @Override
-
-    public void teleopInit() {
-
-        int turnSpeed = joy1.getX();
-
-        int fbSpeed = joy1.getY();
-
-        int turnSpeedr = joy2.getX();
-
-        int fbSpeedr = joy2.getY();
-
+      if (timeCount.get() < 3.0) {
+        final double stick1 = 0.5;
+        double leftMotorPower = stick1;
+        double rightMotorPower = stick1 * -1;
+        leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPower);
+        leftRearMotor.set(ControlMode.PercentOutput, leftMotorPower);
+        rightFrontMotor.set(ControlMode.PercentOutput, rightMotorPower);
+        rightRearMotor.set(ControlMode.PercentOutput, rightMotorPower);
+      }
+      else 
+      {
+        final double stick1 = 0.0;
+        double leftMotorPower = stick1;
+        double rightMotorPower = stick1 * -1;
+        leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPower);
+        leftRearMotor.set(ControlMode.PercentOutput, leftMotorPower);
+        rightFrontMotor.set(ControlMode.PercentOutput, rightMotorPower);
+        rightRearMotor.set(ControlMode.PercentOutput, rightMotorPower); 
+      }
 
     }
 
@@ -135,16 +113,22 @@ public class Robot extends TimedRobot {
 
     @Override
 
-    public void teleopPeriodic() {
-      int stick1 = turnSpeed.getRawAxis(1);
-      int stick2 = fbSpeed.getRawAxis(1);
-      int stick3 = turnSpeedr.getRawAxis(1);
-      int stick4 = fbSpeedr.getRawAxis(1);
-      m_drive.arcadeDrive(fbSpeed, turnSpeed);
-      leftFrontMotor.set(ControlMode.PercentOutput, stick1);
-      leftBackMotor.set(ControlMode.PercentOutput, stick2);
-      rightFrontMotor.set(ControlMode.PercentOutput, stick3);
-      rightBackMotor.set(ControlMode.PercentOutput, stick4);
+  public void teleopInit() {
+
+    final double turnSpeed = joy1.getX();
+    final double fbSpeed = joy1.getY();   
+  }
+
+  @Override
+
+  public void teleopPeriodic() {
+    final double stick1 = joy1.getRawAxis(1);
+    double leftMotorPower = stick1;
+    double rightMotorPower = stick1 * -1;
+    leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPower);
+    leftRearMotor.set(ControlMode.PercentOutput, leftMotorPower);
+    rightFrontMotor.set(ControlMode.PercentOutput, rightMotorPower);
+    rightRearMotor.set(ControlMode.PercentOutput, rightMotorPower);
 
 
     }
