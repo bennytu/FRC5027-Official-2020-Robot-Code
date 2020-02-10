@@ -129,9 +129,34 @@ public class Robot extends TimedRobot {
     leftRearMotor.set(ControlMode.PercentOutput, leftMotorPower);
     rightFrontMotor.set(ControlMode.PercentOutput, rightMotorPower);
     rightRearMotor.set(ControlMode.PercentOutput, rightMotorPower);
-
-
+    timeCount = new Timer();
+    timeCount.reset();
+    timeCount.start();
+    if(turnSpeed > 0.0) {
+      rightMotorPower = -turnSpeed;
+    //  double rightRearMotor = -turnSpeed;
+     // double leftFrontMotor = turnSpeed;
+      leftMotorPower = turnSpeed;
+      leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPower);
+       leftRearMotor.set(ControlMode.PercentOutput, leftMotorPower);
+       if(timeCount.get() < 0.5) {
+      rightFrontMotor.set(ControlMode.PercentOutput, rightMotorPower);
+      rightRearMotor.set(ControlMode.PercentOutput, rightMotorPower);
+       }
     }
+    if(turnSpeed < 0.0) {
+      rightMotorPower = turnSpeed;
+    //  double rightRearMotor = -turnSpeed;
+     // double leftFrontMotor = turnSpeed;
+      leftMotorPower = -turnSpeed;
+      leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPower);
+       leftRearMotor.set(ControlMode.PercentOutput, leftMotorPower);
+       if(timeCount.get() < 0.5) {
+      rightFrontMotor.set(ControlMode.PercentOutput, rightMotorPower);
+      rightRearMotor.set(ControlMode.PercentOutput, rightMotorPower);
+     }
+    }
+  }
 
 
 
