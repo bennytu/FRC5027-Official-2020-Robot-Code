@@ -99,6 +99,7 @@ public class Robot extends TimedRobot {
       else 
       {
         final double stick1 = 0.0;
+        final double xcontrol = 0.0;
         double leftMotorPower = stick1;
         double rightMotorPower = stick1 * -1;
         leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPower);
@@ -116,13 +117,15 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
 
     final double turnSpeed = joy1.getX();
-    final double fbSpeed = joy1.getY();   
+    final double fbSpeed = joy1.getY(); 
+
   }
 
   @Override
 
   public void teleopPeriodic() {
     final double stick1 = joy1.getRawAxis(1);
+    final double xcontrol = joy1.getRawAxis(1);
     double leftMotorPower = stick1;
     double rightMotorPower = stick1 * -1;
     leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPower);
@@ -132,28 +135,28 @@ public class Robot extends TimedRobot {
     timeCount = new Timer();
     timeCount.reset();
     timeCount.start();
+    double leftMotorPowerd = xcontrol;
+    double rightMotorPowerd = xcontrol * -1;
     if(turnSpeed > 0.0) {
       rightMotorPower = -turnSpeed;
     //  double rightRearMotor = -turnSpeed;
      // double leftFrontMotor = turnSpeed;
       leftMotorPower = turnSpeed;
-      leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPower);
-       leftRearMotor.set(ControlMode.PercentOutput, leftMotorPower);
-       if(timeCount.get() < 0.5) {
-      rightFrontMotor.set(ControlMode.PercentOutput, rightMotorPower);
-      rightRearMotor.set(ControlMode.PercentOutput, rightMotorPower);
+       if(timeCount.get() < 3.0) {
+        leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPowerd);
+        leftRearMotor.set(ControlMode.PercentOutput, leftMotorPowerd);
+        rightFrontMotor.set(ControlMode.PercentOutput, rightMotorPowerd);
+        rightRearMotor.set(ControlMode.PercentOutput, rightMotorPowerd);
        }
-    }
+    } 
     if(turnSpeed < 0.0) {
       rightMotorPower = turnSpeed;
-    //  double rightRearMotor = -turnSpeed;
-     // double leftFrontMotor = turnSpeed;
       leftMotorPower = -turnSpeed;
-      leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPower);
-       leftRearMotor.set(ControlMode.PercentOutput, leftMotorPower);
-       if(timeCount.get() < 0.5) {
-      rightFrontMotor.set(ControlMode.PercentOutput, rightMotorPower);
-      rightRearMotor.set(ControlMode.PercentOutput, rightMotorPower);
+       if(timeCount.get() < 3.0) {
+        leftFrontMotor.set(ControlMode.PercentOutput, leftMotorPower);
+        leftRearMotor.set(ControlMode.PercentOutput, leftMotorPower);
+        rightFrontMotor.set(ControlMode.PercentOutput, rightMotorPower);
+        rightRearMotor.set(ControlMode.PercentOutput, rightMotorPower);
      }
     }
   }
