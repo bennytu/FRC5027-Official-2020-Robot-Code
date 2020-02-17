@@ -17,7 +17,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -39,6 +38,10 @@ public class Robot extends TimedRobot {
   public static final int buttonA = 1;
   public static final int buttonB = 2;
   public static final int buttonY = 3;
+  public static final int can7 = 7; //Elevator initialization
+  public static final int can8 = 8; //Hook Initialization (1)
+  public static final int can9 = 9; //Hook Initialization (2)
+
 
   Joystick joy1 = new Joystick(0); //inputs for Joystick
   JoystickButton LowPowerThrow = new JoystickButton(joy1, buttonX); 
@@ -51,6 +54,9 @@ public class Robot extends TimedRobot {
   WPI_VictorSPX rightRearMotor = new WPI_VictorSPX(can4);
   WPI_VictorSPX shooter_leftmotor = new WPI_VictorSPX(can5);
   WPI_VictorSPX shooter_rightmotor = new WPI_VictorSPX(can6);
+  WPI_VictorSPX elevator = new WPI_VictorSPX(can7);
+  WPI_VictorSPX hookmotor1 = new WPI_VictorSPX(can8);
+  WPI_VictorSPX hookmotor2 = new WPI_VictorSPX(can9);
   DifferentialDrive _drive = new DifferentialDrive(leftFrontMotor, rightFrontMotor);
   double powerLevel = 0.0;
 
@@ -59,6 +65,8 @@ public class Robot extends TimedRobot {
   double turnSpeed; //turning speed
   double fbSpeedr; //front back speed
   double turnSpeedr; //turning speed
+  double elevatorval; //Up/Down of elevator
+  double hookmotorval; 
 
   Timer timeCount;
 
@@ -114,6 +122,7 @@ public class Robot extends TimedRobot {
   /* factory default values */
   leftFrontMotor.configFactoryDefault();
   rightFrontMotor.configFactoryDefault();
+  elevator.configFactoryDefault();
 
   /* flip values so robot moves forward when stick-forward/LEDs-green */
   leftFrontMotor.setInverted(false); // <<<<<< Adjust this
@@ -130,6 +139,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     double xSpeed = joy1.getRawAxis(1); // make forward stick positive
     double zRotation = joy1.getRawAxis(2); // WPI Drivetrain uses positive=> right
+    //int Elevatordirection = joy1.getPOV(0);
     boolean lowPowerThrow = joy1.getRawButton(buttonX);
     boolean MediumPowerThrow = joy1.getRawButton(buttonA);
     boolean MediumHighPowerThrow = joy1.getRawButton(buttonB);
@@ -155,10 +165,19 @@ public class Robot extends TimedRobot {
       // Run shooter motors at high speed
        powerLevel = 1.0; 
     }
-      double shooter_leftmotor_power = powerLevel;
-      double shooter_rightmotor_power = powerLevel * -1;
-      shooter_leftmotor.set(ControlMode.PercentOutput, shooter_leftmotor_power);
-      shooter_rightmotor.set(ControlMode.PercentOutput, shooter_rightmotor_power);
+
+    double shooter_leftmotor_power = powerLevel;
+    double shooter_rightmotor_power = powerLevel * -1;
+    shooter_leftmotor.set(ControlMode.PercentOutput, shooter_leftmotor_power);
+    shooter_rightmotor.set(ControlMode.PercentOutput, shooter_rightmotor_power);
+
+    if(joy1.getPOV(0) > 0) {
+      elevator.set(ControlMode.PercentOutput, 1.0);
+    } else if(joy1.getPOV(4) > 0) {
+      elevator.set(ControlMode.PercentOutput, -1.0);
+    } else {
+      elevator.set(ControlMode.PercentOutput, 0.0);
+    }
   }
   
   
