@@ -32,16 +32,19 @@ public class Robot extends TimedRobot {
   public static final int can2 = 2;
   public static final int can3 = 3;
   public static final int can4 = 4;
-  public static final int can5 = 5;
-  public static final int can6 = 6;
+  public static final int can5 = 5; //This is the left shooter motor
+  public static final int can6 = 6; //This is the right shooter motor
   public static final int buttonX = 0;
   public static final int buttonA = 1;
   public static final int buttonB = 2;
   public static final int buttonY = 3;
+  public static final int buttonLT = 7;
+  public static final int buttonRT = 8;
+  public static final int buttonStart = 10;
   public static final int can7 = 7; //Elevator initialization
   public static final int can8 = 8; //Hook Initialization (1)
   public static final int can9 = 9; //Hook Initialization (2)
-
+  public static final int can10 = 10; //Control Panel Manipulation
 
   Joystick joy1 = new Joystick(0); //inputs for Joystick
   JoystickButton LowPowerThrow = new JoystickButton(joy1, buttonX); 
@@ -57,6 +60,7 @@ public class Robot extends TimedRobot {
   WPI_VictorSPX elevator = new WPI_VictorSPX(can7);
   WPI_VictorSPX hookmotor1 = new WPI_VictorSPX(can8);
   WPI_VictorSPX hookmotor2 = new WPI_VictorSPX(can9);
+  WPI_VictorSPX controlpanelmotor = new WPI_VictorSPX(can10);
   DifferentialDrive _drive = new DifferentialDrive(leftFrontMotor, rightFrontMotor);
   double powerLevel = 0.0;
 
@@ -67,6 +71,7 @@ public class Robot extends TimedRobot {
   double turnSpeedr; //turning speed
   double elevatorval; //Up/Down of elevator
   double hookmotorval; 
+  double controlpanelmotorvalue;
 
   Timer timeCount;
 
@@ -123,6 +128,9 @@ public class Robot extends TimedRobot {
   leftFrontMotor.configFactoryDefault();
   rightFrontMotor.configFactoryDefault();
   elevator.configFactoryDefault();
+  hookmotor1.configFactoryDefault();
+  hookmotor2.configFactoryDefault();
+  controlpanelmotor.configFactoryDefault();
 
   /* flip values so robot moves forward when stick-forward/LEDs-green */
   leftFrontMotor.setInverted(false); // <<<<<< Adjust this
@@ -177,6 +185,19 @@ public class Robot extends TimedRobot {
       elevator.set(ControlMode.PercentOutput, -1.0);
     } else {
       elevator.set(ControlMode.PercentOutput, 0.0);
+    }
+    if(joy1.getRawButton(buttonLT)) {
+      hookmotor1.set(ControlMode.PercentOutput, 0.5);
+      hookmotor2.set(ControlMode.PercentOutput, 0.5);
+    } else if(joy1.getRawButton(buttonRT)) {
+      hookmotor1.set(ControlMode.PercentOutput, -0.3);
+      hookmotor2.set(ControlMode.PercentOutput, -0.3);
+    } else {
+      hookmotor1.set(ControlMode.PercentOutput, 0.0);
+      hookmotor2.set(ControlMode.PercentOutput, 0.0);
+    }
+    if(joy1.getRawButton(buttonStart)) {
+      controlpanelmotor.set(ControlMode.PercentOutput, 0.5);
     }
   }
   
