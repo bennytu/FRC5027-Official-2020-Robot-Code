@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -41,6 +42,7 @@ public class Robot extends TimedRobot {
   public static final int buttonLT = 7;
   public static final int buttonRT = 8;
   public static final int buttonStart = 10;
+  public static final int buttonBack = 9;
   public static final int can7 = 7; //Elevator initialization
   public static final int can8 = 8; //Hook Initialization (1)
   public static final int can9 = 9; //Hook Initialization (2)
@@ -163,16 +165,52 @@ public class Robot extends TimedRobot {
     if(lowPowerThrow) {
       // Run shooter motors at low speed
       powerLevel = 0.25;
+        if(joy1.getRawButton(buttonBack)) {
+          timeCount = new Timer();
+          timeCount.reset();
+          timeCount.start();
+          powerLevel = 0.0;
+            if(timeCount.get() < 3.0) {
+          powerLevel = -0.25;
+            }
+        }
     } else if(MediumPowerThrow) {
       // Run shooter motors at medium speed
       powerLevel = 0.5;
-    } else if(MediumHighPowerThrow) {
+        if(joy1.getRawButton(buttonBack)) {
+          timeCount = new Timer();
+          timeCount.reset();
+          timeCount.start();
+          powerLevel = 0.0;
+            if(timeCount.get() < 3.0) {
+              powerLevel = -0.5;
+            }
+        }
+      } else if(MediumHighPowerThrow) {
       // Run shooter motors at medium-high speed
       powerLevel = 0.75;
-    } else if(HighPowerThrow) {
+        if(joy1.getRawButton(buttonBack)) {
+          timeCount = new Timer();
+          timeCount.reset();
+          timeCount.start();
+          powerLevel = 0.0;
+            if(timeCount.get() < 3.0) {
+          powerLevel = -0.75;
+            }
+        }
+      } else if(HighPowerThrow) {
       // Run shooter motors at high speed
        powerLevel = 1.0; 
-    }
+         if(joy1.getRawButton(buttonBack)) {
+          timeCount = new Timer();
+          timeCount.reset();
+          timeCount.start();
+          powerLevel = 0.0;
+            if(timeCount.get() < 3.0) {
+             powerLevel = -1.0;
+            }
+          }
+      }
 
     double shooter_leftmotor_power = powerLevel;
     double shooter_rightmotor_power = powerLevel * -1;
