@@ -16,8 +16,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,21 +28,22 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  */
 
 public class Robot extends TimedRobot {
-
+  public static final int channel = 0;
   public static final int can1 = 1;
   public static final int can2 = 2;
   public static final int can3 = 3;
   public static final int can4 = 4;
   public static final int can5 = 5; //This is the left shooter motor
   public static final int can6 = 6; //This is the right shooter motor
-  public static final int buttonX = 0;
-  public static final int buttonA = 1;
-  public static final int buttonB = 2;
-  public static final int buttonY = 3;
-  public static final int buttonLT = 7;
-  public static final int buttonRT = 8;
+  public static final int buttonX = 0; //shooter motor low
+  public static final int buttonA = 1; //shooter motor medium
+  public static final int buttonB = 2; //shooter motor medium-high
+  public static final int buttonY = 3;//shooter motor high
+  public static final int buttonLT = 7; //hook motor left
+  public static final int buttonRT = 8; //hook motor right
   public static final int buttonStart = 10;
-  public static final int buttonBack = 9;
+  public static final int buttonTopLeft = 100; //Please remap the integer value to the correct one. Solenoid
+  public static final int buttonTopRight = 200; //Please remap the integer value to the correct one. Solenoid
   public static final int can7 = 7; //Elevator initialization
   public static final int can8 = 8; //Hook Initialization (1)
   public static final int can9 = 9; //Hook Initialization (2)
@@ -63,6 +64,8 @@ public class Robot extends TimedRobot {
   WPI_VictorSPX hookmotor1 = new WPI_VictorSPX(can8);
   WPI_VictorSPX hookmotor2 = new WPI_VictorSPX(can9);
   WPI_VictorSPX controlpanelmotor = new WPI_VictorSPX(can10);
+  Solenoid Solenoid0 = new Solenoid(channel); //Controls charge of pneumatics
+  Compressor Compressor0 = new Compressor(channel); //Implements more features
   DifferentialDrive _drive = new DifferentialDrive(leftFrontMotor, rightFrontMotor);
   double powerLevel = 0.0;
 
@@ -237,8 +240,15 @@ public class Robot extends TimedRobot {
     if(joy1.getRawButton(buttonStart)) {
       controlpanelmotor.set(ControlMode.PercentOutput, 0.5);
     }
+    if(joy1.getRawButton(buttonTopLeft)) {
+      public static final on = true;
+      Solenoid0.set(boolean on);
+    } if(joy1.getRawButton(buttonTopRight)) {
+      public static final on = false;
+      Solenoid0.set(boolean on);
+    }
   }
-  
+
   
   
   @Override
