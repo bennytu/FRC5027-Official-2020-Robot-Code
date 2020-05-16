@@ -17,7 +17,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * The VM is configured to automatically run this class, and to call the
